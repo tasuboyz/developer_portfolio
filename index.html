@@ -1,0 +1,132 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Developer Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">JD</div>
+            <div class="nav-right">
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <div class="theme-toggle">
+                    <div class="theme-toggle-icon">
+                        <!-- Icon will be inserted by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home">
+            <div class="hero">
+                <h1>Tasuhiro Davide Kato</h1>
+                <h2>Freelance Developer</h2>
+                <p>Turning ideas into reality through code</p>
+                <div class="cta-buttons">
+                    <button class="primary-btn">Hire Me</button>
+                    <button class="secondary-btn">Download CV</button>
+                </div>
+            </div>
+            <div class="hero-graphic"></div>
+        </section>
+
+        <section id="projects">
+            <h2>Featured Projects</h2>
+            <div id="project-grid" class="project-grid">
+                <!-- Projects will be populated dynamically -->
+                <div class="loading-projects">
+                    Loading projects...
+                </div>
+            </div>
+        </section>
+
+        <section id="skills">
+            <h2>Skills & Expertise</h2>
+            
+            <!-- GitHub Stats Section -->
+            <div id="github-stats" style="display: none; margin-bottom: 3rem;">
+                <h3>GitHub Statistics</h3>
+                <div class="github-profile">
+                    <h4 id="github-username">Loading...</h4>
+                    <p id="github-bio">Loading...</p>
+                </div>
+                <div class="github-metrics">
+                    <div class="github-metric">
+                        <h5>Repositories</h5>
+                        <span id="github-repos">-</span>
+                    </div>
+                    <div class="github-metric">
+                        <h5>Followers</h5>
+                        <span id="github-followers">-</span>
+                    </div>
+                    <div class="github-metric">
+                        <h5>Total Stars</h5>
+                        <span id="github-stars">-</span>
+                    </div>
+                    <div class="github-metric">
+                        <h5>Total Forks</h5>
+                        <span id="github-forks">-</span>
+                    </div>
+                </div>
+                <div class="github-languages-container">
+                    <h5>Programming Languages & Technologies</h5>
+                    <div id="github-languages" class="tech-stack"></div>
+                </div>
+            </div>
+            
+            <!-- Dynamic Skills Container -->
+            <div id="dynamic-skills" class="skills-container">
+                <!-- Skills will be populated dynamically based on GitHub data -->
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2>Get in Touch</h2>
+            <div class="contact-container">
+                <form id="contact-form">
+                    <input type="text" placeholder="Name" required>
+                    <input type="email" placeholder="Email" required>
+                    <textarea placeholder="Message" required></textarea>
+                    <button type="submit">Send Message</button>
+                </form>
+                <div class="contact-info">
+                    <div class="info-item">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        <span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="c0aaafa8aeeea4afa580a5b8a1adb0aca5eea3afad">[email&#160;protected]</a></span>
+                    </div>
+                    <div class="info-item">
+                        <svg class="icon" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                        <span>San Francisco, CA</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="social-links">
+            <a href="#" class="social-link">GitHub</a>
+            <a href="#" class="social-link">LinkedIn</a>
+            <a href="#" class="social-link">Twitter</a>
+        </div>
+        <p>&copy; 2023 John Doe. All rights reserved.</p>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="script.js"></script>
+</body>
+</html>
