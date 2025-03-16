@@ -1,0 +1,68 @@
+{
+  "it": {
+    "downloadCV": "Scarica CV",
+    "hireMeBtn": "Contattami",
+    "positions": {
+      "Tecnico Sistemista Informatico": "Tecnico Sistemista Informatico",
+      "Tecnico IT - Apprendista": "Tecnico IT - Apprendista",
+      "Stagista Programmazione PLC": "Stagista Programmazione PLC",
+      "Aiuto compiti": "Aiuto compiti"
+    },
+    "sectionTitles": {
+      "experiences": "Esperienze Professionali",
+      "education": "Formazione",
+      "skills": "Competenze Tecniche",
+      "languages": "Lingue",
+      "otherInfo": "Altre Informazioni"
+    },
+    "skillCategories": {
+      "programming": "Programmazione",
+      "industrialAutomation": "Automazione Industriale",
+      "operatingSystems": "Sistemi Operativi"
+    },
+    "downloadOptions": {
+      "title": "Scarica Curriculum",
+      "chooseFormat": "Scegli il formato:",
+      "generating": "Il PDF è in preparazione..."
+    },
+    "contact": {
+      "mobile": "mobile",
+      "fixed": "fisso",
+      "drivingLicense": "Patente di guida",
+      "personalQualities": "Qualità personali"
+    }
+  },
+  "en": {
+    "downloadCV": "Download CV",
+    "hireMeBtn": "Contact Me",
+    "positions": {
+      "Tecnico Sistemista Informatico": "IT Systems Specialist",
+      "Tecnico IT - Apprendista": "IT Technician - Apprentice",
+      "Stagista Programmazione PLC": "PLC Programming Intern",
+      "Aiuto compiti": "Tutor"
+    },
+    "sectionTitles": {
+      "experiences": "Professional Experience",
+      "education": "Education",
+      "skills": "Technical Skills",
+      "languages": "Languages",
+      "otherInfo": "Additional Information"
+    },
+    "skillCategories": {
+      "programming": "Programming",
+      "industrialAutomation": "Industrial Automation",
+      "operatingSystems": "Operating Systems"
+    },
+    "downloadOptions": {
+      "title": "Download CV",
+      "chooseFormat": "Choose format:",
+      "generating": "Generating PDF..."
+    },
+    "contact": {
+      "mobile": "mobile",
+      "fixed": "home",
+      "drivingLicense": "Driving License",
+      "personalQualities": "Personal qualities"
+    }
+  }
+}

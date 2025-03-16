@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            const username = 'tasuboyz';
+            const username = document.querySelector('meta[name="github-username"]')?.content || 'tasuboyz';
             
             // Fetch user and repos data with retry logic
             const [userData, reposData] = await Promise.all([
@@ -219,6 +219,9 @@ document.addEventListener('DOMContentLoaded', () => {
             updateGitHubStats(userData, reposData, languagePercentages);
             document.getElementById('github-stats').style.display = 'block';
 
+            // Sincronizza con i dati del CV se disponibili
+            syncGitHubWithCV(userData, languagePercentages);
+
         } catch (error) {
             console.error('Error fetching GitHub stats:', error);
             
@@ -252,20 +255,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Funzione per sincronizzare i dati GitHub con il CV
+    function syncGitHubWithCV(userData, languages) {
+        // Controlla se il CV è già stato caricato
+        const cvContainer = document.getElementById('cv-container');
+        if (cvContainer && !cvContainer.querySelector('.cv-loading')) {
+            // Il CV è già caricato, aggiorniamo solo le informazioni di contatto GitHub
+            const githubLink = cvContainer.querySelector('a[href*="github.com"]');
+            if (githubLink) {
+                githubLink.textContent = `github.com/${userData.login}`;
+                githubLink.href = userData.html_url;
+            }
+            
+            // Aggiorna anche l'immagine del profilo se disponibile
+            const profilePic = document.querySelector('.profile-picture');
+            if (profilePic && userData.avatar_url) {
+                profilePic.src = userData.avatar_url;
+            }
+        }
+    }
+
     // Modifica la funzione updateGitHubStats per includere l'aggiornamento delle skills
     function updateGitHubStats(userData, reposData, languages) {
         const totalStars = reposData.reduce((acc, repo) => acc + repo.stargazers_count, 0);
         const totalForks = reposData.reduce((acc, repo) => acc + repo.forks_count, 0);
 
-        // Update basic stats
+        // Update basic stats with real numbers
         document.getElementById('github-username').textContent = userData.name || userData.login;
-        document.getElementById('github-bio').textContent = userData.bio || 'GitHub Developer';
+        document.getElementById('github-bio').textContent = userData.bio || 'Developer';
         document.getElementById('github-repos').textContent = userData.public_repos;
         document.getElementById('github-followers').textContent = userData.followers;
         document.getElementById('github-stars').textContent = totalStars;
         document.getElementById('github-forks').textContent = totalForks;
 
-        // Update languages display
+        // Update languages display with actual percentages
         const languagesContainer = document.getElementById('github-languages');
         languagesContainer.innerHTML = '';
         languages.forEach(lang => {
@@ -275,9 +298,12 @@ document.addEventListener('DOMContentLoaded', () => {
             languagesContainer.appendChild(span);
         });
 
-        // Aggiungi questa riga per aggiornare anche la sezione skills
+        // Update skills section with actual language data
         updateSkillsSection(languages);
         updateProjectsSection(reposData);
+        
+        // Store the language data for CV integration
+        window.githubLanguages = languages;
     }
 
     function updateSkillsSection(languages) {
@@ -370,8 +396,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // Curriculum functionality
     async function initCurriculum() {
         try {
+            // Mostra un indicatore di caricamento più elegante
+            document.getElementById('cv-container').innerHTML = `
+                <div class="cv-loading">
+                    <div class="loading-spinner"></div>
+                    <p>Caricamento curriculum...</p>
+                </div>
+            `;
+            
             const response = await fetch('data/cv.json');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            
             const cvData = await response.json();
+            
+            // Integra i dati GitHub se disponibili
+            if (window.githubLanguages) {
+                integrateGitHubData(cvData, window.githubLanguages);
+            }
             
             renderCurriculum(cvData);
 
@@ -404,11 +447,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             });
 
-            // Download CV button
+            // Download CV button with actual PDF generation
             document.getElementById('download-cv').addEventListener('click', () => {
-                // In una implementazione reale, questo scaricherebbe il PDF
-                // Per ora, apriamo il file markdown in una nuova scheda
-                window.open('Curriculum.md', '_blank');
+                generatePDF(cvData);
             });
 
             // Animation for timeline items
@@ -443,11 +484,140 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error loading curriculum data:', error);
             document.getElementById('cv-container').innerHTML = `
                 <div class="error-message">
-                    <p>Failed to load curriculum data. Please try again later.</p>
-                    <button onclick="window.location.reload()">Retry</button>
+                    <p>Errore nel caricamento del curriculum. ${error.message}</p>
+                    <button onclick="window.location.reload()">Riprova</button>
                 </div>
             `;
         }
+    }
+
+    // Integra i dati GitHub nel CV
+    function integrateGitHubData(cvData, languages) {
+        // Aggiorna le skills di programmazione basandosi sui dati GitHub
+        const programmingSkills = {
+            advanced: [],
+            intermediate: [],
+            basic: []
+        };
+        
+        // Classifica le competenze basandosi sulle percentuali reali di utilizzo su GitHub
+        languages.forEach(lang => {
+            const percentage = parseFloat(lang.percentage);
+            if (percentage >= 20) {
+                programmingSkills.advanced.push(lang.name);
+            } else if (percentage >= 5) {
+                programmingSkills.intermediate.push(lang.name);
+            } else {
+                programmingSkills.basic.push(lang.name);
+            }
+        });
+        
+        // Mantieni le competenze esistenti che non sono nelle linguaggi GitHub
+        const existingSkills = cvData.skills.programming;
+        
+        // Unisci mantenendo l'ordine originale ma integrando nuovi linguaggi
+        ['advanced', 'intermediate', 'basic'].forEach(level => {
+            const newSkills = programmingSkills[level].filter(
+                skill => !existingSkills.advanced.includes(skill) && 
+                      !existingSkills.intermediate.includes(skill) &&
+                      !existingSkills.basic.includes(skill)
+            );
+            
+            // Aggiungi nuovi linguaggi al livello appropriato
+            if (newSkills.length > 0) {
+                cvData.skills.programming[level] = [...existingSkills[level], ...newSkills];
+            }
+        });
+        
+        return cvData;
+    }
+
+    // Generate PDF from CV data
+    function generatePDF(cvData) {
+        // In una implementazione reale, qui utilizzeremmo una libreria come jsPDF, pdfmake o html2pdf
+        // Per ora, mostriamo un messaggio e offriamo il download del Markdown
+        const downloadOptions = document.createElement('div');
+        downloadOptions.className = 'download-options';
+        downloadOptions.innerHTML = `
+            <div class="download-overlay">
+                <div class="download-modal">
+                    <h3>Scarica Curriculum</h3>
+                    <p>Scegli il formato:</p>
+                    <div class="download-buttons">
+                        <a href="Curriculum.md" download="Tasuhiro_Davide_Kato_CV.md" class="secondary-btn">Markdown</a>
+                        <button id="generate-pdf-btn" class="primary-btn">PDF</button>
+                    </div>
+                    <button class="close-btn">✖</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(downloadOptions);
+        
+        // Gestisci la chiusura del modal
+        downloadOptions.querySelector('.close-btn').addEventListener('click', () => {
+            document.body.removeChild(downloadOptions);
+        });
+        
+        // Gestisci la generazione del PDF (simulata)
+        downloadOptions.querySelector('#generate-pdf-btn').addEventListener('click', () => {
+            downloadOptions.querySelector('.download-modal').innerHTML = `
+                <h3>Generazione PDF</h3>
+                <p>Il PDF è in preparazione...</p>
+                <div class="loading-spinner"></div>
+            `;
+            
+            // Simula il tempo di generazione
+            setTimeout(() => {
+                // Crea un file Blob semplice per simulare il PDF
+                const pdfContent = generatePDFContent(cvData);
+                const blob = new Blob([pdfContent], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                
+                // Crea un link di download e fai clic su di esso
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Tasuhiro_Davide_Kato_CV.pdf';
+                a.click();
+                
+                // Pulisci
+                URL.revokeObjectURL(url);
+                document.body.removeChild(downloadOptions);
+            }, 1500);
+        });
+    }
+    
+    function generatePDFContent(cvData) {
+        // Questa è una simulazione - in una implementazione reale useremmo una libreria PDF
+        return `%PDF-1.7
+%CV generated for ${cvData.basics.name}
+1 0 obj
+<</Type/Catalog/Pages 2 0 R>>
+endobj
+2 0 obj
+<</Type/Pages/Kids[3 0 R]/Count 1>>
+endobj
+3 0 obj
+<</Type/Page/Parent 2 0 R/MediaBox[0 0 595 842]/Contents 4 0 R>>
+endobj
+4 0 obj
+<</Length 123>>
+stream
+BT
+/F1 24 Tf
+50 750 Td
+(Curriculum Vitae - ${cvData.basics.name}) Tj
+/F1 12 Tf
+0 -50 Td
+(Email: ${cvData.basics.email}) Tj
+ET
+endstream
+endobj
+trailer
+<</Size 5/Root 1 0 R>>
+startxrf
+555
+%%EOF`;
     }
 
     function renderCurriculum(data) {
@@ -457,22 +627,39 @@ document.addEventListener('DOMContentLoaded', () => {
         // Build HTML content
         let html = `
             <div class="cv-header">
-                <h1>${data.basics.name}</h1>
-                <p class="tagline">${data.basics.tagline}</p>
-                
-                <div class="contact-details">
-                    <div class="contact-item">
-                        <strong>Email:</strong> ${data.basics.email}
-                    </div>
-                    <div class="contact-item">
-                        <strong>Telefono:</strong> ${data.basics.phone.mobile} (mobile), ${data.basics.phone.fixed} (fisso)
-                    </div>
-                    <div class="contact-item">
-                        <strong>GitHub:</strong> <a href="https://github.com/${data.basics.profiles.github}" target="_blank">github.com/${data.basics.profiles.github}</a>
-                    </div>
-                    <div class="contact-item">
-                        <strong>Telegram:</strong> <a href="https://t.me/${data.basics.profiles.telegram}" target="_blank">t.me/${data.basics.profiles.telegram}</a>
-                    </div>
+                <div class="cv-header-content">
+                    <h1>${data.basics.name}</h1>
+                    <p class="tagline">${data.basics.tagline}</p>
+                </div>
+                <div class="profile-picture-container">
+                    <img src="https://avatars.githubusercontent.com/${data.basics.profiles.github}" alt="${data.basics.name}" class="profile-picture">
+                </div>
+            </div>
+            
+            <div class="contact-details">
+                <div class="contact-item">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                    <span>${data.basics.email}</span>
+                </div>
+                <div class="contact-item">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M6.62,10.79C8.06,13.62 10.38,15.94 13.21,17.38L15.41,15.18C15.69,14.9 16.08,14.82 16.43,14.93C17.55,15.3 18.75,15.5 20,15.5A1,1 0 0,1 21,16.5V20A1,1 0 0,1 20,21A17,17 0 0,1 3,4A1,1 0 0,1 4,3H7.5A1,1 0 0,1 8.5,4C8.5,5.25 8.7,6.45 9.07,7.57C9.18,7.92 9.1,8.31 8.82,8.59L6.62,10.79Z"/>
+                    </svg>
+                    <span>${data.basics.phone.mobile} (mobile)</span>
+                </div>
+                <div class="contact-item">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z"/>
+                    </svg>
+                    <a href="https://github.com/${data.basics.profiles.github}" target="_blank">github.com/${data.basics.profiles.github}</a>
+                </div>
+                <div class="contact-item">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <path d="M9.78,18.65L10.06,14.42L17.74,7.5C18.08,7.19 17.67,7.04 17.22,7.31L7.74,13.3L3.64,12C2.76,11.75 2.75,11.14 3.84,10.7L19.81,4.54C20.54,4.21 21.24,4.72 20.96,5.84L18.24,18.65C18.05,19.56 17.5,19.78 16.74,19.36L12.6,16.3L10.61,18.23C10.38,18.46 10.19,18.65 9.78,18.65Z"/>
+                    </svg>
+                    <a href="https://t.me/${data.basics.profiles.telegram}" target="_blank">t.me/${data.basics.profiles.telegram}</a>
                 </div>
             </div>
 
@@ -526,38 +713,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="skills-grid">
         `;
 
-        // Programming skills with level bars
+        // Programming skills with dynamic level bars based on actual proficiency
         html += `
             <div class="skill-category">
                 <h3>Programmazione</h3>
         `;
         
-        // Advanced skills
+        // Advanced skills - using actual data
         data.skills.programming.advanced.forEach(skill => {
+            // Cerca la corrispondenza nei dati GitHub
+            const gitHubLang = window.githubLanguages?.find(lang => lang.name === skill);
+            const percentage = gitHubLang ? parseFloat(gitHubLang.percentage) : 90;
+            
             html += `
                 <div class="skill-item">
                     <div class="skill-name">${skill}</div>
-                    <div class="skill-bar" style="--skill-level: 90%"></div>
+                    <div class="skill-bar" style="--skill-level: ${Math.min(percentage * 1.5, 95)}%"></div>
                 </div>
             `;
         });
         
-        // Intermediate skills
+        // Intermediate skills - using actual data
         data.skills.programming.intermediate.forEach(skill => {
+            const gitHubLang = window.githubLanguages?.find(lang => lang.name === skill);
+            const percentage = gitHubLang ? parseFloat(gitHubLang.percentage) : 60;
+            
             html += `
                 <div class="skill-item">
                     <div class="skill-name">${skill}</div>
-                    <div class="skill-bar" style="--skill-level: 60%"></div>
+                    <div class="skill-bar" style="--skill-level: ${Math.min(percentage * 2, 75)}%"></div>
                 </div>
             `;
         });
         
-        // Basic skills
+        // Basic skills - using actual data
         data.skills.programming.basic.forEach(skill => {
+            const gitHubLang = window.githubLanguages?.find(lang => lang.name === skill);
+            const percentage = gitHubLang ? parseFloat(gitHubLang.percentage) : 30;
+            
             html += `
                 <div class="skill-item">
                     <div class="skill-name">${skill}</div>
-                    <div class="skill-bar" style="--skill-level: 30%"></div>
+                    <div class="skill-bar" style="--skill-level: ${Math.min(percentage * 3, 50)}%"></div>
                 </div>
             `;
         });

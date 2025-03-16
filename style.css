@@ -681,6 +681,194 @@ body.dark-theme .error-message {
     color: var(--primary-color);
 }
 
+.cv-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    gap: 2rem;
+}
+
+.cv-header-content {
+    flex: 1;
+}
+
+.profile-picture-container {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    border: 3px solid var(--primary-color);
+}
+
+.profile-picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.contact-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.contact-details .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background-color: var(--accent-color);
+    border-radius: 0.5rem;
+    transition: transform 0.3s;
+}
+
+.contact-details .contact-item:hover {
+    transform: translateY(-2px);
+}
+
+.contact-details .icon {
+    width: 20px;
+    height: 20px;
+    fill: var(--primary-color);
+}
+
+.contact-details a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.contact-details a:hover {
+    text-decoration: underline;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-left-color: var(--primary-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.cv-loading {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+}
+
+/* Download options overlay */
+.download-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.download-modal {
+    background-color: var(--bg-color);
+    padding: 2rem;
+    border-radius: 0.5rem;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+}
+
+.close-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+.close-btn:hover {
+    color: var(--primary-color);
+}
+
+.download-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.download-buttons .secondary-btn {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.skill-bar {
+    height: 8px;
+    background-color: var(--accent-color);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.skill-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+    transition: width 1.2s ease-in-out;
+}
+
+.skill-bar.animate::after {
+    width: var(--skill-level);
+}
+
+.skill-name {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+}
+
+.skill-name::after {
+    content: var(--skill-level);
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+/* Improved responsiveness for the timeline */
+@media (max-width: 768px) {
+    .cv-header {
+        flex-direction: column;
+    }
+    
+    .contact-details {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 768px) {
     .timeline::after {
         left: 31px;
