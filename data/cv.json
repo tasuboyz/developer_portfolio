@@ -1,0 +1,130 @@
+{
+  "basics": {
+    "name": "Tasuhiro Davide Kato",
+    "tagline": "Turning ideas into reality through code",
+    "email": "tasuhiro.davide@gmail.com",
+    "phone": {
+      "mobile": "+39 371-1369107",
+      "fixed": "030-2770789"
+    },
+    "profiles": {
+      "github": "tasuboyz",
+      "telegram": "tasu_Channel"
+    },
+    "location": "Via IV Novembre 15, GUSSAGO (BS), ITALIA",
+    "birth": {
+      "date": "02/08/2000",
+      "place": "Tokyo (Giappone)"
+    },
+    "nationality": "Italiana e giapponese"
+  },
+  "work": [
+    {
+      "company": "Bonomi Industries S.R.L",
+      "position": "Tecnico Sistemista Informatico",
+      "duration": "1 anno",
+      "achievements": [
+        "Gestione dell'infrastruttura IT aziendale e supporto agli utenti",
+        "Lettore automatico di file PRN con riconoscimento QR code e barcode",
+        "Software per la scansione dei permessi del filesystem aziendale",
+        "Interfacce user-friendly per database",
+        "Bot Telegram per monitoraggio accessi ai varchi aziendali"
+      ]
+    },
+    {
+      "company": "Asonext S.P.A",
+      "position": "Tecnico IT - Apprendista",
+      "duration": "1 anno e mezzo",
+      "achievements": [
+        "Helpdesk e supporto utenti (sistemi Windows)",
+        "Configurazione pannelli HMI per produzione",
+        "Sviluppo di strumenti interni (C#, Visual Studio, DevExpress)",
+        "Programmazione PLC (KOP, AWL, SCL)"
+      ]
+    },
+    {
+      "company": "Asonext S.P.A",
+      "position": "Stagista Programmazione PLC",
+      "duration": "5 mesi",
+      "achievements": [
+        "Formazione su linguaggi di programmazione PLC",
+        "Supporto allo sviluppo di sistemi di automazione industriale"
+      ]
+    },
+    {
+      "company": "Casa dello Studente (Gussago)",
+      "position": "Aiuto compiti",
+      "duration": "",
+      "achievements": [
+        "Assistenza allo studio per bambini della scuola primaria"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "degree": "Diploma di Specializzazione Tecnica Superiore in Meccatronica",
+      "institution": "ITS - Istituto di Istruzione Superiore Luigi Cerebotani, Lonato (BS)"
+    },
+    {
+      "degree": "Diploma Liceo Scienze Umane - Opzione Economico Sociale",
+      "institution": "Istituto Marco Polo, Brescia, 2019"
+    }
+  ],
+  "skills": {
+    "programming": {
+      "advanced": ["C#", "Python"],
+      "intermediate": ["VBA"],
+      "basic": ["HTML", "CSS", "JavaScript"]
+    },
+    "industrialAutomation": ["PLC (KOP, AWL, SCL)", "HMI Configuration"],
+    "systems": {
+      "windows": "Advanced Management & Troubleshooting",
+      "linux": "Server Configuration & Hosting"
+    },
+    "software": ["Visual Studio", "DevExpress", "Microsoft Office", "CAD (base)"],
+    "devOps": ["Git", "GitHub", "SQL (base)"]
+  },
+  "languages": [
+    {
+      "language": "Italiano",
+      "level": "Madrelingua"
+    },
+    {
+      "language": "Inglese",
+      "level": "B1-B2 (Discreto)"
+    },
+    {
+      "language": "Giapponese",
+      "level": "Eccellente comprensione e parlato, Buona lettura, Discreta scrittura"
+    }
+  ],
+  "digitalSkills": [
+    {
+      "skill": "Elaborazione delle informazioni",
+      "level": "Buono"
+    },
+    {
+      "skill": "Comunicazione",
+      "level": "Buono"
+    },
+    {
+      "skill": "Creazione di contenuti",
+      "level": "Molto Buono"
+    },
+    {
+      "skill": "Sicurezza",
+      "level": "Buono"
+    },
+    {
+      "skill": "Risoluzione di problemi",
+      "level": "Modestamente Buono"
+    }
+  ],
+  "other": {
+    "drivingLicense": "B",
+    "hobbies": [
+      "Sviluppo bot Telegram per hobby: t.me/tasu_Channel (3600 utenze)"
+    ],
+    "qualities": ["Educato", "Rispettoso"]
+  }
+}

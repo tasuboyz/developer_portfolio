@@ -97,6 +97,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     observer.observe(document.querySelector('#home'));
 
+    // Initialize curriculum
+    if (document.getElementById('curriculum')) {
+        initCurriculum();
+    }
+
     // Theme functions
     function initTheme() {
         const savedTheme = localStorage.getItem('theme');
@@ -360,5 +365,267 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
         `).join('');
+    }
+
+    // Curriculum functionality
+    async function initCurriculum() {
+        try {
+            const response = await fetch('data/cv.json');
+            const cvData = await response.json();
+            
+            renderCurriculum(cvData);
+
+            // Language toggle functionality
+            document.querySelectorAll('.cv-lang-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.cv-lang-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    // Implementazione futura: Traduci il CV in base alla lingua selezionata
+                    // Per ora, solo il bottone cambia stato
+                    const lang = btn.dataset.lang;
+                    console.log(`Curriculum language changed to: ${lang}`);
+                    
+                    // Simulare una traduzione per scopi dimostrativi
+                    if (lang === 'en') {
+                        document.querySelectorAll('.job-title').forEach(el => {
+                            if (el.textContent === 'Tecnico Sistemista Informatico') 
+                                el.textContent = 'IT Systems Specialist';
+                            if (el.textContent === 'Tecnico IT - Apprendista') 
+                                el.textContent = 'IT Technician - Apprentice';
+                            if (el.textContent === 'Stagista Programmazione PLC') 
+                                el.textContent = 'PLC Programming Intern';
+                            if (el.textContent === 'Aiuto compiti') 
+                                el.textContent = 'Tutor';
+                        });
+                    } else {
+                        renderCurriculum(cvData); // Re-render in italiano
+                    }
+                });
+            });
+
+            // Download CV button
+            document.getElementById('download-cv').addEventListener('click', () => {
+                // In una implementazione reale, questo scaricherebbe il PDF
+                // Per ora, apriamo il file markdown in una nuova scheda
+                window.open('Curriculum.md', '_blank');
+            });
+
+            // Animation for timeline items
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            timelineItems.forEach(item => {
+                observer.observe(item);
+            });
+
+            // Animation for skill bars
+            const skillBars = document.querySelectorAll('.skill-bar');
+            const skillObserver = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate');
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            skillBars.forEach(bar => {
+                skillObserver.observe(bar);
+            });
+
+        } catch (error) {
+            console.error('Error loading curriculum data:', error);
+            document.getElementById('cv-container').innerHTML = `
+                <div class="error-message">
+                    <p>Failed to load curriculum data. Please try again later.</p>
+                    <button onclick="window.location.reload()">Retry</button>
+                </div>
+            `;
+        }
+    }
+
+    function renderCurriculum(data) {
+        const container = document.getElementById('cv-container');
+        if (!container) return;
+
+        // Build HTML content
+        let html = `
+            <div class="cv-header">
+                <h1>${data.basics.name}</h1>
+                <p class="tagline">${data.basics.tagline}</p>
+                
+                <div class="contact-details">
+                    <div class="contact-item">
+                        <strong>Email:</strong> ${data.basics.email}
+                    </div>
+                    <div class="contact-item">
+                        <strong>Telefono:</strong> ${data.basics.phone.mobile} (mobile), ${data.basics.phone.fixed} (fisso)
+                    </div>
+                    <div class="contact-item">
+                        <strong>GitHub:</strong> <a href="https://github.com/${data.basics.profiles.github}" target="_blank">github.com/${data.basics.profiles.github}</a>
+                    </div>
+                    <div class="contact-item">
+                        <strong>Telegram:</strong> <a href="https://t.me/${data.basics.profiles.telegram}" target="_blank">t.me/${data.basics.profiles.telegram}</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cv-section">
+                <h3>Esperienze Professionali</h3>
+                <div class="timeline">
+        `;
+
+        // Add work experiences to timeline
+        data.work.forEach((job, index) => {
+            const isLeft = index % 2 === 0;
+            html += `
+                <div class="timeline-item ${isLeft ? 'timeline-item-left' : 'timeline-item-right'}">
+                    <div class="timeline-content">
+                        <h3>${job.company}</h3>
+                        <h4 class="job-title">${job.position}</h4>
+                        ${job.duration ? `<p><em>${job.duration}</em></p>` : ''}
+                        <ul>
+                            ${job.achievements.map(achievement => `<li>${achievement}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        });
+
+        html += `
+                </div>
+            </div>
+
+            <div class="cv-section">
+                <h3>Formazione</h3>
+                <div class="education-container">
+        `;
+
+        // Add education
+        data.education.forEach(edu => {
+            html += `
+                <div class="education-item">
+                    <h4>${edu.degree}</h4>
+                    <p>${edu.institution}</p>
+                </div>
+            `;
+        });
+
+        html += `
+                </div>
+            </div>
+
+            <div class="cv-section">
+                <h3>Competenze Tecniche</h3>
+                <div class="skills-grid">
+        `;
+
+        // Programming skills with level bars
+        html += `
+            <div class="skill-category">
+                <h3>Programmazione</h3>
+        `;
+        
+        // Advanced skills
+        data.skills.programming.advanced.forEach(skill => {
+            html += `
+                <div class="skill-item">
+                    <div class="skill-name">${skill}</div>
+                    <div class="skill-bar" style="--skill-level: 90%"></div>
+                </div>
+            `;
+        });
+        
+        // Intermediate skills
+        data.skills.programming.intermediate.forEach(skill => {
+            html += `
+                <div class="skill-item">
+                    <div class="skill-name">${skill}</div>
+                    <div class="skill-bar" style="--skill-level: 60%"></div>
+                </div>
+            `;
+        });
+        
+        // Basic skills
+        data.skills.programming.basic.forEach(skill => {
+            html += `
+                <div class="skill-item">
+                    <div class="skill-name">${skill}</div>
+                    <div class="skill-bar" style="--skill-level: 30%"></div>
+                </div>
+            `;
+        });
+        
+        html += `
+            </div>
+            
+            <div class="skill-category">
+                <h3>Automazione Industriale</h3>
+        `;
+        
+        data.skills.industrialAutomation.forEach(skill => {
+            html += `
+                <div class="skill-item">
+                    <div class="skill-name">${skill}</div>
+                    <div class="skill-bar" style="--skill-level: 75%"></div>
+                </div>
+            `;
+        });
+        
+        html += `
+            </div>
+            
+            <div class="skill-category">
+                <h3>Sistemi Operativi</h3>
+                <div class="skill-item">
+                    <div class="skill-name">Windows - ${data.skills.systems.windows}</div>
+                    <div class="skill-bar" style="--skill-level: 85%"></div>
+                </div>
+                <div class="skill-item">
+                    <div class="skill-name">Linux - ${data.skills.systems.linux}</div>
+                    <div class="skill-bar" style="--skill-level: 70%"></div>
+                </div>
+            </div>
+        `;
+        
+        html += `
+            </div>
+            
+            <div class="cv-section">
+                <h3>Lingue</h3>
+                <div class="languages-grid">
+        `;
+        
+        // Languages
+        data.languages.forEach(lang => {
+            html += `
+                <div class="language-card">
+                    <h4>${lang.language}</h4>
+                    <p>${lang.level}</p>
+                </div>
+            `;
+        });
+        
+        html += `
+                </div>
+            </div>
+            
+            <div class="cv-section">
+                <h3>Altre Informazioni</h3>
+                <p><strong>Patente di guida:</strong> ${data.other.drivingLicense}</p>
+                <ul class="hobbies-list">
+                    ${data.other.hobbies.map(hobby => `<li>${hobby}</li>`).join('')}
+                </ul>
+                <p><strong>Qualità personali:</strong> ${data.other.qualities.join(', ')}</p>
+            </div>
+        `;
+        
+        container.innerHTML = html;
     }
 });

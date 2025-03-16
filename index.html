@@ -10,12 +10,13 @@
 <body>
     <header>
         <nav>
-            <div class="logo">JD</div>
+            <div class="logo">TDK</div>
             <div class="nav-right">
                 <ul>
                     <li><a href="#home">Home</a></li>
                     <li><a href="#projects">Projects</a></li>
                     <li><a href="#skills">Skills</a></li>
+                    <li><a href="#curriculum">Curriculum</a></li>
                     <li><a href="#contact">Contact</a></li>
                 </ul>
                 <div class="theme-toggle">
@@ -88,6 +89,22 @@
             <!-- Dynamic Skills Container -->
             <div id="dynamic-skills" class="skills-container">
                 <!-- Skills will be populated dynamically based on GitHub data -->
+            </div>
+        </section>
+
+        <section id="curriculum" class="curriculum-section">
+            <h2>Curriculum Vitae</h2>
+            <div class="cv-controls">
+                <button id="download-cv" class="primary-btn">Download PDF</button>
+                <div class="cv-language-toggle">
+                    <button class="cv-lang-btn active" data-lang="it">IT</button>
+                    <button class="cv-lang-btn" data-lang="en">EN</button>
+                </div>
+            </div>
+            
+            <div id="cv-container" class="cv-container">
+                <!-- CV content will be loaded dynamically -->
+                <div class="cv-loading">Loading curriculum...</div>
             </div>
         </section>
 
