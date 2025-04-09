@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 400" width="500" height="400">
+  <!-- Background elements -->
+  <rect x="100" y="50" width="300" height="250" rx="15" fill="#f0f4f8" />
+  
+  <!-- Code window -->
+  <rect x="120" y="70" width="260" height="210" rx="5" fill="#ffffff" stroke="#e0e0e0" stroke-width="2" />
+  <rect x="120" y="70" width="260" height="25" rx="5" fill="#e0e6ed" stroke="#e0e0e0" stroke-width="2" />
+  
+  <!-- Window buttons -->
+  <circle cx="135" cy="82" r="5" fill="#ff6b6b" />
+  <circle cx="155" cy="82" r="5" fill="#ffdd59" />
+  <circle cx="175" cy="82" r="5" fill="#1dd1a1" />
+  
+  <!-- Code lines -->
+  <rect x="140" y="120" width="160" height="8" rx="4" fill="#2563eb" opacity="0.7" />
+  <rect x="140" y="140" width="200" height="8" rx="4" fill="#2563eb" opacity="0.5" />
+  <rect x="140" y="160" width="120" height="8" rx="4" fill="#2563eb" opacity="0.7" />
+  <rect x="140" y="180" width="180" height="8" rx="4" fill="#2563eb" opacity="0.5" />
+  <rect x="140" y="200" width="100" height="8" rx="4" fill="#2563eb" opacity="0.7" />
+  <rect x="140" y="220" width="140" height="8" rx="4" fill="#2563eb" opacity="0.5" />
+  
+  <!-- Person -->
+  <circle cx="250" cy="320" r="35" fill="#3b82f6" />
+  <path d="M250 355 L250 390" stroke="#3b82f6" stroke-width="10" stroke-linecap="round" />
+  
+  <!-- Abstract code symbols floating around -->
+  <text x="80" y="130" font-family="monospace" font-size="18" fill="#2563eb" opacity="0.8">{}</text>
+  <text x="370" y="150" font-family="monospace" font-size="18" fill="#2563eb" opacity="0.8">[]</text>
+  <text x="100" y="220" font-family="monospace" font-size="18" fill="#2563eb" opacity="0.8">()</text>
+  <text x="390" y="240" font-family="monospace" font-size="18" fill="#2563eb" opacity="0.8">;</text>
+  <text x="75" y="280" font-family="monospace" font-size="18" fill="#2563eb" opacity="0.8">/</text>
+</svg>

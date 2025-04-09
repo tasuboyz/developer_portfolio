@@ -13,40 +13,45 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize GSAP
     gsap.registerPlugin(ScrollTrigger);
 
-    // Animate hero section on load
+    // Animate hero section on load - modify to prevent layout issues
     gsap.from('.hero h1', {
         opacity: 0,
-        y: 50,
-        duration: 1,
-        delay: 0.2
+        y: 20,
+        duration: 0.8,
+        delay: 0.2,
+        clearProps: "all" // Important: clear props after animation
     });
 
     gsap.from('.hero h2', {
         opacity: 0,
-        y: 50,
-        duration: 1,
-        delay: 0.4
+        y: 20,
+        duration: 0.8,
+        delay: 0.4,
+        clearProps: "all" // Important: clear props after animation
     });
 
     gsap.from('.hero p', {
         opacity: 0,
-        y: 50,
-        duration: 1,
-        delay: 0.6
+        y: 20,
+        duration: 0.8,
+        delay: 0.6,
+        clearProps: "all" // Important: clear props after animation
     });
 
     gsap.from('.cta-buttons', {
         opacity: 0,
-        y: 50,
-        duration: 1,
-        delay: 0.8
+        y: 20,
+        duration: 0.8,
+        delay: 0.8,
+        clearProps: "all" // Important: clear props after animation
     });
 
     gsap.from('.hero-graphic', {
         opacity: 0,
-        x: 100,
-        duration: 1,
-        delay: 1
+        x: 50,
+        duration: 0.8,
+        delay: 1,
+        clearProps: "all" // Important: clear props after animation
     });
 
     // Animate project cards on scroll
