@@ -1,3 +1,6 @@
+// Import the PDF Generator module
+import PDFGenerator from './js/pdfGenerator.js';
+
 // Wait for DOM content to be loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize theme from localStorage
@@ -539,90 +542,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Generate PDF from CV data
     function generatePDF(cvData) {
-        // In una implementazione reale, qui utilizzeremmo una libreria come jsPDF, pdfmake o html2pdf
-        // Per ora, mostriamo un messaggio e offriamo il download del Markdown
-        const downloadOptions = document.createElement('div');
-        downloadOptions.className = 'download-options';
-        downloadOptions.innerHTML = `
-            <div class="download-overlay">
-                <div class="download-modal">
-                    <h3>Scarica Curriculum</h3>
-                    <p>Scegli il formato:</p>
-                    <div class="download-buttons">
-                        <a href="Curriculum.md" download="Tasuhiro_Davide_Kato_CV.md" class="secondary-btn">Markdown</a>
-                        <button id="generate-pdf-btn" class="primary-btn">PDF</button>
-                    </div>
-                    <button class="close-btn">✖</button>
-                </div>
-            </div>
-        `;
-        
-        document.body.appendChild(downloadOptions);
-        
-        // Gestisci la chiusura del modal
-        downloadOptions.querySelector('.close-btn').addEventListener('click', () => {
-            document.body.removeChild(downloadOptions);
-        });
-        
-        // Gestisci la generazione del PDF (simulata)
-        downloadOptions.querySelector('#generate-pdf-btn').addEventListener('click', () => {
-            downloadOptions.querySelector('.download-modal').innerHTML = `
-                <h3>Generazione PDF</h3>
-                <p>Il PDF è in preparazione...</p>
-                <div class="loading-spinner"></div>
-            `;
-            
-            // Simula il tempo di generazione
-            setTimeout(() => {
-                // Crea un file Blob semplice per simulare il PDF
-                const pdfContent = generatePDFContent(cvData);
-                const blob = new Blob([pdfContent], { type: 'application/pdf' });
-                const url = URL.createObjectURL(blob);
-                
-                // Crea un link di download e fai clic su di esso
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'Tasuhiro_Davide_Kato_CV.pdf';
-                a.click();
-                
-                // Pulisci
-                URL.revokeObjectURL(url);
-                document.body.removeChild(downloadOptions);
-            }, 1500);
-        });
-    }
-    
-    function generatePDFContent(cvData) {
-        // Questa è una simulazione - in una implementazione reale useremmo una libreria PDF
-        return `%PDF-1.7
-%CV generated for ${cvData.basics.name}
-1 0 obj
-<</Type/Catalog/Pages 2 0 R>>
-endobj
-2 0 obj
-<</Type/Pages/Kids[3 0 R]/Count 1>>
-endobj
-3 0 obj
-<</Type/Page/Parent 2 0 R/MediaBox[0 0 595 842]/Contents 4 0 R>>
-endobj
-4 0 obj
-<</Length 123>>
-stream
-BT
-/F1 24 Tf
-50 750 Td
-(Curriculum Vitae - ${cvData.basics.name}) Tj
-/F1 12 Tf
-0 -50 Td
-(Email: ${cvData.basics.email}) Tj
-ET
-endstream
-endobj
-trailer
-<</Size 5/Root 1 0 R>>
-startxrf
-555
-%%EOF`;
+        PDFGenerator.openDownloadModal(cvData);
     }
 
     function renderCurriculum(data) {
